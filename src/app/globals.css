@@ -12,15 +12,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* The UI is light-themed throughout (bg-white surfaces, gray text scale).
+   Dark mode is not implemented yet — flipping only these variables left form
+   inputs inheriting near-white text on white backgrounds. Reinstate this
+   together with dark variants on the components. */
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
