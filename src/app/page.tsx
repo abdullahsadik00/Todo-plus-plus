@@ -5,29 +5,30 @@ import { TaskList } from '@/components/TaskList';
 import { FilterBar } from '@/components/FilterBar';
 import { Sidebar } from '@/components/Sidebar';
 import { Header } from '@/components/Header';
+import { DueReminderBanner } from '@/components/DueReminderBanner';
 import { useTaskStats } from '@/stores/selectors';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
 export default function Home() {
   const stats = useTaskStats();
+  // Registered once here, not per component — one listener owns the global keys.
+  useKeyboardShortcuts();
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 p-6 max-w-4xl
-  mx-auto">
+        <main className="flex-1 p-6 max-w-4xl mx-auto">
           {/* Stats */}
-          <div className="grid grid-cols-4 gap-4
-  mb-6">
-            <StatCard label="Total"
-              value={stats.total} />
-            <StatCard label="Active"
-              value={stats.active} />
-            <StatCard label="Completed"
-              value={stats.completed} />
-            <StatCard label="Overdue"
-              value={stats.overdue} color="red" />
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+            <StatCard label="Total" value={stats.total} />
+            <StatCard label="Active" value={stats.active} />
+            <StatCard label="Completed" value={stats.completed} color="green" />
+            <StatCard label="Overdue" value={stats.overdue} color="red" />
           </div>
+          {/* Due-date reminders */}
+          <DueReminderBanner />
           {/* Add Task */}
           <div className="mb-6">
             <AddTaskForm />
@@ -41,6 +42,7 @@ export default function Home() {
     </div>
   );
 }
+
 function StatCard({
   label,
   value,

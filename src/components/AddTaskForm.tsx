@@ -1,5 +1,8 @@
+'use client';
+
 import { useTaskStore } from "@/stores/taskStore";
-import { se } from "date-fns/locale";
+import { parseDateInput } from "@/lib/utils";
+import { NEW_TASK_INPUT_ID } from "@/hooks/useKeyboardShortcuts";
 import { useState } from "react";
 
 export function AddTaskForm() {
@@ -10,16 +13,18 @@ export function AddTaskForm() {
     const [priority, setPriority] = useState<'low' | 'medium' | 'high'>("medium");
     const [category, setCategory] = useState<string>('personal');
 
-    const { addTask, categories } = useTaskStore()
+    // Per-value selectors, so this form doesn't re-render on unrelated store changes.
+    const addTask = useTaskStore(state => state.addTask);
+    const categories = useTaskStore(state => state.categories);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!title.trim()) return;
 
         addTask({
-            title,
+            title: title.trim(),
             description: description.trim() || undefined,
-            dueDate: dueDate ? new Date(dueDate) : undefined,
+            dueDate: parseDateInput(dueDate),
             priority,
             category: category,
             completed: false,
@@ -46,8 +51,10 @@ export function AddTaskForm() {
         <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm p-4">
             <div className="flex items-center gap-3">
                 <input
+                    id={NEW_TASK_INPUT_ID}
                     type="text"
-                    placeholder="Add a new task..."
+                    placeholder="Add a new task... (press n)"
+                    aria-label="New task title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     onFocus={() => setIsExpanded(true)}
@@ -71,7 +78,7 @@ export function AddTaskForm() {
                         {/* Priority */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
-                            <select value={priority} onChange={(e) => setPriority(e.target.value as any)}
+                            <select value={priority} onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
                                 className="rounded px-3 py-1.5 shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
                                 <option value="low">Low</option>
                                 <option value="medium">Medium</option>

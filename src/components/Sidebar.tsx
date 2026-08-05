@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Inbox, Plus, Trash2, X } from 'lucide-react';
-import { useTaskStore } from '@/stores/taskStore';
+import { useTaskStore, FALLBACK_CATEGORY_ID } from '@/stores/taskStore';
 import { cn } from '@/lib/utils';
 
 const NEW_CATEGORY_COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'];
@@ -87,8 +87,8 @@ export function Sidebar() {
                                     <span className="text-xs text-gray-400">{countFor(category.id)}</span>
                                 </button>
 
-                                {/* 'personal' is the fallback category tasks are moved to, so it stays */}
-                                {category.id !== 'personal' && (
+                                {/* The fallback category is where orphaned tasks land, so it stays */}
+                                {category.id !== FALLBACK_CATEGORY_ID && (
                                     <button
                                         type="button"
                                         onClick={() => {

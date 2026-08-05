@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useTaskStore } from './taskStore'
-import { ta } from "date-fns/locale";
 
 export function useFilteredTasks() {
     const tasks = useTaskStore(state => state.tasks);
@@ -27,22 +26,26 @@ export function useFilteredTasks() {
         // Filter by search query
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
-            filtered = filtered.filter(task => {
+            filtered = filtered.filter(task =>
                 task.title.toLowerCase().includes(query) ||
-                    task.description?.toLowerCase().includes(query)
-            })
+                (task.description?.toLowerCase().includes(query) ?? false)
+            )
         }
 
         // Sort tasks
         filtered.sort((a, b) => {
             switch (sortBy) {
+                case 'order':
+                    // Manual drag order
+                    return a.order - b.order;
                 case 'dueDate':
                     if (!a.dueDate) return 1;
                     if (!b.dueDate) return -1;
                     return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
-                case 'priority':
+                case 'priority': {
                     const priorityOrder = { 'high': 1, 'medium': 2, 'low': 3 };
                     return priorityOrder[a.priority] - priorityOrder[b.priority];
+                }
                 case 'createdAt':
                     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
                 case 'updatedAt':

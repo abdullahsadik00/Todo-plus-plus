@@ -19,4 +19,4 @@ export interface Category {
 }
 
 export type FilterStatus = 'all' | 'completed' | 'active';
-export type SortOption = 'dueDate' | 'priority' | 'createdAt' | 'updatedAt';
+export type SortOption = 'order' | 'dueDate' | 'priority' | 'createdAt' | 'updatedAt';

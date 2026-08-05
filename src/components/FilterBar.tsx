@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import { useTaskStore } from '@/stores/taskStore';
 import { useTaskStats } from '@/stores/selectors';
+import { SEARCH_INPUT_ID } from '@/hooks/useKeyboardShortcuts';
 import { cn } from '@/lib/utils';
 import type { FilterStatus, SortOption } from '@/types';
 
@@ -14,6 +15,7 @@ const FILTERS: { value: FilterStatus; label: string }[] = [
 ]
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+    { value: 'order', label: 'Manual order' },
     { value: 'createdAt', label: 'Created' },
     { value: 'updatedAt', label: 'Updated' },
     { value: 'dueDate', label: 'Due date' },
@@ -50,10 +52,11 @@ export function FilterBar() {
             <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
+                    id={SEARCH_INPUT_ID}
                     type="search"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search tasks..."
+                    placeholder="Search tasks... (press /)"
                     aria-label="Search tasks"
                     className="w-full pl-9 pr-9 py-2 rounded outline-none shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500"
                 />

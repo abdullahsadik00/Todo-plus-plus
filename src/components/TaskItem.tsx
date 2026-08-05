@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from "react";
 import { useTaskStore } from "@/stores/taskStore";
 import { useSortable } from "@dnd-kit/sortable";
@@ -6,15 +8,23 @@ import { isToday, isPast, format } from "date-fns";
 import { Task } from "@/types";
 import { cn } from "@/lib/utils";
 import { Check, GripVertical, Pencil, Trash2 } from "lucide-react";
+import { TaskEditModal } from "./TaskEditModal";
 
 interface TaskItemProps {
     task: Task;
+    canReorder?: boolean;
 }
 
-export function TaskItem({ task }: TaskItemProps) {
+export function TaskItem({ task, canReorder = true }: TaskItemProps) {
     const [isEditing, setIsEditing] = useState(false);
-    const { toggleTasks, deleteTask, updateTask } = useTaskStore();
+
+    // One selector per value. Calling useTaskStore() bare would subscribe this row to
+    // the whole store, so every task would re-render on any change — including typing
+    // in the search box.
+    const toggleTasks = useTaskStore(state => state.toggleTasks);
+    const deleteTask = useTaskStore(state => state.deleteTask);
     const categories = useTaskStore(state => state.categories);
+
     const {
         attributes,
         listeners,
@@ -22,15 +32,18 @@ export function TaskItem({ task }: TaskItemProps) {
         transform,
         transition,
         isDragging,
-    } = useSortable({ id: task.id });
+    } = useSortable({ id: task.id, disabled: !canReorder });
 
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
     }
     const category = categories.find(c => c.id === task.category);
-    const isOverdue = task.dueDate && isPast(new Date(task.dueDate)) && !task.completed
-    const isDueToday = task.dueDate && isToday(new Date(task.dueDate))
+    const isDueToday = task.dueDate ? isToday(new Date(task.dueDate)) : false;
+    // Due today is already "past" for most of the day, so overdue must exclude it.
+    const isOverdue = task.dueDate
+        ? isPast(new Date(task.dueDate)) && !isDueToday && !task.completed
+        : false;
 
     const priorityColors = {
         low: 'bg-green-100 text-green-800',
@@ -47,10 +60,19 @@ export function TaskItem({ task }: TaskItemProps) {
                 isDragging && 'opacity-50 shadow-lg',
                 task.completed && 'opacity-60',
             )}>
-            {/* Drag Handle */}
+            {/* Drag Handle — only this element starts a drag, not the whole row */}
             <button
                 {...listeners}
-                {...attributes} className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded" aria-label="Drag to reorder">
+                {...attributes}
+                disabled={!canReorder}
+                className={cn(
+                    'p-1 rounded',
+                    canReorder
+                        ? 'cursor-grab active:cursor-grabbing hover:bg-gray-100'
+                        : 'cursor-not-allowed opacity-40',
+                )}
+                aria-label={canReorder ? "Drag to reorder" : "Reordering unavailable while sorted"}
+                title={canReorder ? undefined : "Switch Sort by to Manual order to reorder tasks"}>
                 <GripVertical className="w-4 h-4 text-gray-400" />
             </button>
 
@@ -99,15 +121,15 @@ export function TaskItem({ task }: TaskItemProps) {
                     </p>
                 )}
 
-                {/* Due Date */}
+                {/* Due Date — red if overdue, orange if due today, gray otherwise */}
                 {task.dueDate && (
                     <p className={cn(
                         'text-xs mt-1',
-                        isOverdue && 'text-red-600 font-medium',
-                        'text-orange-600',
-                        isDueToday && !isOverdue &&
-                        !isOverdue && !isDueToday &&
-                        'text-gray-500'
+                        isOverdue
+                            ? 'text-red-600 font-medium'
+                            : isDueToday
+                                ? 'text-orange-600'
+                                : 'text-gray-500',
                     )}>
                         {isOverdue && '⚠ '}
                         Due: {format(new Date(task.dueDate),
@@ -133,48 +155,13 @@ export function TaskItem({ task }: TaskItemProps) {
                     />
                 </button>
             </div>
+
             {/* Edit Modal */}
             {isEditing && (
-                // <TaskEditModal
-                //     task={task}
-                //     onClose={() => setIsEditing(false)}
-                // />
-                <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-                    <div className="bg-white p-6 rounded shadow-xl w-full max-w-md">
-                        <h2 className="text-lg font-semibold mb-4">Edit Task</h2>
-                        {/* Form fields for editing the task */}
-                        <form onSubmit={(e) => {
-                            e.preventDefault();
-                            // Handle form submission and update the task
-                            setIsEditing(false);
-                        }}>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Title</label>
-                                <input type="text" defaultValue={task.title} className="mt-1 block w-full rounded-md shadow-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none sm:text-sm" />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Description</label>
-                                <textarea defaultValue={task.description} className="mt-1 block w-full rounded-md shadow-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none sm:text-sm" />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Due Date</label>
-                                <input type="date" defaultValue={task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd') : ''} className="mt-1 block w-full rounded-md shadow-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none sm:text-sm" />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Priority</label>
-                                <select defaultValue={task.priority} className="mt-1 block w-full rounded-md shadow-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none sm:text-sm">
-                                    <option value="low">Low</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="high">High</option>
-                                </select>
-                            </div>
-                            <div className="flex justify-end gap-2">
-                                <button type="button" onClick={() => setIsEditing(false)} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
-                                <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                <TaskEditModal
+                    task={task}
+                    onClose={() => setIsEditing(false)}
+                />
             )}
         </li>
     )
