@@ -8,7 +8,7 @@ export function Header() {
     const progress = stats.total === 0 ? 0 : Math.round((stats.completed / stats.total) * 100);
 
     return (
-        <header className="sticky top-0 z-10 flex items-center gap-4 px-6 py-4 bg-white border-b">
+        <header className="sticky top-0 z-10 flex items-center gap-4 px-6 py-4 bg-white shadow-sm">
             <div className="flex items-center gap-2">
                 <ListTodo className="w-6 h-6 text-blue-500" />
                 <h1 className="text-lg font-semibold text-gray-900">Todo++</h1>

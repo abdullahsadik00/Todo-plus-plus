@@ -42,7 +42,7 @@ export function TaskItem({ task }: TaskItemProps) {
             ref={setNodeRef}
             style={style}
             className={cn(
-                'flex items-center gap-3 p-4 bg-white rounded-lg border shadow-sm',
+                'flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm',
                 'transition-all duration-200',
                 isDragging && 'opacity-50 shadow-lg',
                 task.completed && 'opacity-60',
@@ -56,9 +56,9 @@ export function TaskItem({ task }: TaskItemProps) {
 
             {/* Checkbox */}
             <button onClick={() => toggleTasks(task.id)} className={cn(
-                'w-5 h-5 rounded-full border-2 shrink-0',
+                'w-5 h-5 rounded-full ring-2 ring-inset shrink-0',
                 'flex items-center justify-center transition-colors',
-                task.completed ? 'bg-green-500 border-green-500' : 'border-gray-300 hover:border-green-500',
+                task.completed ? 'bg-green-500 ring-green-500 text-white' : 'ring-gray-300 hover:ring-green-500',
             )} aria-label={task.completed ? "Mark as incomplete" : "Mark as complete"}>
                 {task.completed && <Check className="w-3 h-3" />}
             </button>
@@ -140,7 +140,7 @@ export function TaskItem({ task }: TaskItemProps) {
                 //     onClose={() => setIsEditing(false)}
                 // />
                 <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-                    <div className="bg-white p-6 rounded shadow-lg w-full max-w-md">
+                    <div className="bg-white p-6 rounded shadow-xl w-full max-w-md">
                         <h2 className="text-lg font-semibold mb-4">Edit Task</h2>
                         {/* Form fields for editing the task */}
                         <form onSubmit={(e) => {
@@ -150,19 +150,19 @@ export function TaskItem({ task }: TaskItemProps) {
                         }}>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Title</label>
-                                <input type="text" defaultValue={task.title} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500 sm:text-sm" />
+                                <input type="text" defaultValue={task.title} className="mt-1 block w-full rounded-md shadow-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none sm:text-sm" />
                             </div>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Description</label>
-                                <textarea defaultValue={task.description} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500 sm:text-sm" />
+                                <textarea defaultValue={task.description} className="mt-1 block w-full rounded-md shadow-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none sm:text-sm" />
                             </div>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Due Date</label>
-                                <input type="date" defaultValue={task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd') : ''} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500 sm:text-sm" />
+                                <input type="date" defaultValue={task.dueDate ? format(new Date(task.dueDate), 'yyyy-MM-dd') : ''} className="mt-1 block w-full rounded-md shadow-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none sm:text-sm" />
                             </div>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700">Priority</label>
-                                <select defaultValue={task.priority} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:border-indigo-500 sm:text-sm">
+                                <select defaultValue={task.priority} className="mt-1 block w-full rounded-md shadow-sm ring-1 ring-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none sm:text-sm">
                                     <option value="low">Low</option>
                                     <option value="medium">Medium</option>
                                     <option value="high">High</option>

@@ -43,7 +43,7 @@ export function AddTaskForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg border p-4">
+        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm p-4">
             <div className="flex items-center gap-3">
                 <input
                     type="text"
@@ -64,7 +64,7 @@ export function AddTaskForm() {
                     <textarea value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder="Description (optional)"
-                        className="w-full p-2 border rounded resize-none"
+                        className="w-full p-2 rounded resize-none shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
                         rows={2}
                     />
                     <div className="flex flex-wrap gap-4">
@@ -72,7 +72,7 @@ export function AddTaskForm() {
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Priority</label>
                             <select value={priority} onChange={(e) => setPriority(e.target.value as any)}
-                                className="border rounded px-3 py-1.5">
+                                className="rounded px-3 py-1.5 shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
                                 <option value="low">Low</option>
                                 <option value="medium">Medium</option>
                                 <option value="high">High</option>
@@ -85,7 +85,7 @@ export function AddTaskForm() {
                                 Due Date
                             </label>
                             <input type="date"
-                                value={dueDate} onChange={(e) => setDueDate(e.target.value)} className="border rounded px-3 py-1.5" />
+                                value={dueDate} onChange={(e) => setDueDate(e.target.value)} className="rounded px-3 py-1.5 shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500 outline-none" />
                         </div>
 
                         {/* Category */}
@@ -93,7 +93,7 @@ export function AddTaskForm() {
                             <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                             <select value={category}
                                 onChange={(e) => setCategory(e.target.value)}
-                                className="border rounded px-3 py-1.5"
+                                className="rounded px-3 py-1.5 shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
                             >
                                 {categories.map((cat) => (
                                     <option key={cat.id} value={cat.id}>{cat.name}</option>

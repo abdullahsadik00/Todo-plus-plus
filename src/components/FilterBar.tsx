@@ -45,7 +45,7 @@ export function FilterBar() {
     }
 
     return (
-        <div className="mb-4 space-y-3 p-4 bg-white rounded-lg border shadow-sm">
+        <div className="mb-4 space-y-3 p-4 bg-white rounded-lg shadow-sm">
             {/* Search */}
             <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -55,7 +55,7 @@ export function FilterBar() {
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search tasks..."
                     aria-label="Search tasks"
-                    className="w-full pl-9 pr-9 py-2 border rounded outline-none focus:border-blue-500"
+                    className="w-full pl-9 pr-9 py-2 rounded outline-none shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500"
                 />
                 {query && (
                     <button
@@ -104,7 +104,7 @@ export function FilterBar() {
                         id="sort-by"
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as SortOption)}
-                        className="border rounded px-3 py-1.5 text-sm"
+                        className="rounded px-3 py-1.5 text-sm shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500 outline-none"
                     >
                         {SORT_OPTIONS.map(({ value, label }) => (
                             <option key={value} value={value}>

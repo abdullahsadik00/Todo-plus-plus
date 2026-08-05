@@ -36,7 +36,7 @@ export function Sidebar() {
     }
 
     return (
-        <aside className="w-64 shrink-0 p-4 border-r bg-white min-h-screen">
+        <aside className="w-64 shrink-0 p-4 bg-white min-h-screen shadow-[1px_0_3px_0_rgb(0_0_0_/_0.08)]">
             <nav aria-label="Categories">
                 <h2 className="px-3 mb-2 text-xs font-semibold tracking-wide text-gray-400 uppercase">
                     Categories
@@ -116,7 +116,7 @@ export function Sidebar() {
                             placeholder="Category name"
                             aria-label="New category name"
                             autoFocus
-                            className="flex-1 min-w-0 px-3 py-1.5 text-sm border rounded outline-none focus:border-blue-500"
+                            className="flex-1 min-w-0 px-3 py-1.5 text-sm rounded outline-none shadow-sm ring-1 ring-gray-200 focus:ring-2 focus:ring-blue-500"
                         />
                         <button
                             type="button"
