@@ -3,6 +3,8 @@
 A task manager built with Next.js, TypeScript, and Zustand. Tasks carry a category,
 priority, due date, and manual sort order, and persist to `localStorage` — no backend.
 
+**[Live demo](https://todo-plus-plus-omega.vercel.app)**. Your tasks stay in your own browser.
+
 ## Features
 
 - Add, edit, complete, and delete tasks
