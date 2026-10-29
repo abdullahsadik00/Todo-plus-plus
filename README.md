@@ -3,8 +3,6 @@
 A task manager built with Next.js, TypeScript, and Zustand. Tasks carry a category,
 priority, due date, and manual sort order, and persist to `localStorage` — no backend.
 
-Portfolio Project 1 from `../BUILD-01-task-manager.md`.
-
 ## Features
 
 - Add, edit, complete, and delete tasks
